@@ -3,9 +3,9 @@
 //
 // flyingGeeseAnimation.cpp
 // This program implements a frame-based animation (timer event-based) of three geese flying accross the
-// screen at the rate of 10 units (1 move) per 100 msec. A single function (draw_geese) has been used to 
+// screen at the rate of 10 units (1 move) per 100 msec. A single function (draw_geese()) has been used to 
 // draw all three birds, moveGeeseAndFlapWings() increases the x-offset and wing position and animate() is
-// called every 100 msec which calls this function.
+// called every 100 msec which calls that function and redraws geese in new position.
 //
 // EXTRA CREDIT:
 // 1. Birds flap their wings as they move. 
@@ -116,18 +116,18 @@ void moveGeeseAndFlapWings() {
 void animate(int value) {
 	/* Recursive call to animate after each 100 msec. */
 
-	// At each 100 msec, checks if isAnimate flag is 1 and if is, starts animation
+	// At each 100 msec, checks if isAnimate flag is 1 and if it is, starts animation
 	if (isAnimate)
 	{
-			//moves birds towards the right of screen and redraws frame
-			moveGeeseAndFlapWings();
-			glutPostRedisplay();
-			glutTimerFunc(animationPeriod, animate, 0);	
+		//move birds towards the right of the screen and redraws frame
+		moveGeeseAndFlapWings();
+		glutPostRedisplay();
+		glutTimerFunc(animationPeriod, animate, 0);	
 	}
 }
 
 void restartAnimationFromStart() {
-	/* Restarts the animation from start by setting initial global values and calls display_func. */
+	/* Restarts the animation from start by setting initial global values and calls display_func(). */
 	if (isAnimate == 0) {
 		isAnimate = 1;
 	}
@@ -143,7 +143,7 @@ void startAnimationFromCurrentLocation() {
 		glutPostRedisplay();
 		glutTimerFunc(animationPeriod, animate, 0);
 	}
-	// start flag is increased on each animation
+	// Start flag is increased on each animation
 	start_flag += 1;
 	std::cout << "Press any key to restart animation.." << std::endl;
 }
@@ -151,7 +151,7 @@ void startAnimationFromCurrentLocation() {
 void keyInput(unsigned char key, int x, int y) {
 	/* Function to handle keyboard input. */
 	if (start_flag == 0) {
-	// On fresh start, animation starts from the current location
+	// On new start, animation starts from the current location
 		startAnimationFromCurrentLocation();
 	}
 	else {
