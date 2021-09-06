@@ -2,7 +2,7 @@
 // CS 445/545 Prog 1 for Digya Acharya
 //
 // flyingGeeseAnimation.cpp
-// This program implements a frame-based animation (timer event-based) of three geese flying accross the
+// This program implements a frame-based animation (timer event-based) of three geese flying across the
 // screen at the rate of 10 units (1 move) per 100 msec. A single function (draw_geese()) has been used to 
 // draw all three birds, moveGeeseAndFlapWings() increases the x-offset and wing position and animate() is
 // called every 100 msec which calls that function and redraws geese in new position.
@@ -21,6 +21,7 @@
 // Global variables
 static int isAnimate = 0; // Flag to keep track of the animation state
 static int animationPeriod = 100; // Time interval between consecutive frames
+static float start_flag; // Keeps track of whether the program has started for the first time or it's a restart
 
 // Position of birds
 static float z; // Position in the z-plane
@@ -36,13 +37,11 @@ static float x_pos; // Current offset for movement in x-direction each frame
 static float wing_pos1; // the first wing value set to be approx. 90 degree with the next wing
 static float wing_pos2; // the second wing value set to be approx. 90 degree with the first one
 
-static float start_flag; // Keeps track of whether the program has started for the first time or it's a restart
-
 
 void init() {
-	/* Sets background color and value of the coordinates at the initial position. */
+	/* Sets the background color and value of the coordinates at the initial position. */
 
-	// Sets initial background color
+	// Sets the background color to white
 	glClearColor(1.0, 1.0, 1.0, 1.0);
 
 	// Sets initial value of the coordinates
@@ -100,13 +99,13 @@ void moveGeeseAndFlapWings() {
 
 	x_pos += 10.0;
 
-	// Wing position cycles between 3 values, i.e, 75, 95 and 115 for the leftmost birds and 185, 205 and 225
-	//for a front bird.
+	// Wing position cycles between 3 values, i.e, 75, 95 and 115 for the leftmost birds and 185, 205 and
+	// 225 for a front bird.
 
-	// Increases value from 75 if less than 115
+	// Increases value from 75 and 185
 	wing_pos1 += 20.0;
 	wing_pos2 += 20.0;
-	// Resets value to 75 if greater than 115
+	// Resets value to 75 and 185 if position of the wing of first bird is greater than 115
 	if (wing_pos1 > 115) {
 		wing_pos1 = 75.0;
 		wing_pos2 = 185.0;
@@ -119,7 +118,7 @@ void animate(int value) {
 	// At each 100 msec, checks if isAnimate flag is 1 and if it is, starts animation
 	if (isAnimate)
 	{
-		//move birds towards the right of the screen and redraws frame
+		//Move birds toward the right of the screen and redraws frame
 		moveGeeseAndFlapWings();
 		glutPostRedisplay();
 		glutTimerFunc(animationPeriod, animate, 0);	
@@ -131,7 +130,7 @@ void restartAnimationFromStart() {
 	if (isAnimate == 0) {
 		isAnimate = 1;
 	}
-	// Initialize global variables
+	// Initializes global variables
 	init();
 	glutPostRedisplay();		
 }
@@ -160,24 +159,26 @@ void keyInput(unsigned char key, int x, int y) {
 	}
 }
 
-// Set width and height of canvas to 480 by 480.
+
+// Sets width and height of canvas to 480 by 480.
 #define canvas_Width 480
 #define canvas_Height 480
 char canvas_Name[] = "FLYING GEESE ANIMATION";
+
 
 int main(int argc, char ** argv) {
 	std::cout << "Any Key Click Will Start Animation.." << std::endl;
 	glutInit(&argc, argv);
 	my_setup(canvas_Width, canvas_Height, canvas_Name);
 	
-	// Timer function for moving geese every 100 msec
+	// Moves geese every 100 msec
 	glutTimerFunc(animationPeriod, animate, 0);
-	// Display function for clearing the screen and redrawing before each new frame is generated
+	// Clears the screen and redraws before each new frame is generated
 	glutDisplayFunc(display_func);
-	// Keyboard function for handling different key press
+	// Handles different key press
 	glutKeyboardFunc(keyInput);
 
-	// Initialize global variables
+	// Initializes global variables
 	init();
 	glutMainLoop();
 	return 0;

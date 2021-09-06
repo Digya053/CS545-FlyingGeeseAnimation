@@ -22,7 +22,7 @@ void my_3d_projection(int width, int height)
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0.0, 480.0, 0.0, 480.0, 0, 100.0);
+	glOrtho(0.0, width_bound, 0.0, height_bound, 0, 100.0);
 	glMatrixMode(GL_MODELVIEW);
 }
 
