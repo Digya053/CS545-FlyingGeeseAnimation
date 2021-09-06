@@ -1,6 +1,3 @@
-#include <GL/glew.h>
-#include <GL/freeglut.h>
-
 #pragma once
 /***********************************************************
 
@@ -12,6 +9,9 @@ that sets viewing parameters for orthographic 3D display.
     TSN 08/2021 version - for OpenGL 4.3 w/legacy compatibility
 OpenGL445Setup.h
 ************************************************************/
+
+#include <GL/glew.h>
+#include <GL/freeglut.h>
 
 /* reshape callback handler - defines viewing parameters */
 
