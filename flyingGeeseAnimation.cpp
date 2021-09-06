@@ -1,19 +1,17 @@
-// CS 445/545 Prog 1 for Digya Achayrya
-/////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// CS 445/545 Prog 1 for Digya Acharya
+//
 // flyingGeeseAnimation.cpp
-// This program implements a frame-based animation (timer event-based) of three geese flying 
-// accross the screen at the rate of 10 units (1 move) per 100 msec.
+// This program implements a frame-based animation (timer event-based) of three geese flying accross the
+// screen at the rate of 10 units (1 move) per 100 msec. A single function (draw_geese) has been used to 
+// draw all three birds, moveGeeseAndFlapWings() increases the x-offset and wing position and animate() is
+// called every 100 msec which calls this function.
 //
 // EXTRA CREDIT:
 // 1. Birds flap their wings as they move. 
-// 2. Pressing 'ENTER' restarts the animation after the birds fly off the screen. 
-// 3. Press 'SPACE' for pausing the animation and any key for starting/playing it again from
-// the paused position.
+// 2. Pressing any key (numbers and alphabets) starts and restarts the animation. 
 //
-// Interaction: Press any key (numbers and alphabets) to start the animation.
-//
-// Digya Acharya
-/////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <iostream>
 #include <GL/glew.h>
@@ -34,9 +32,11 @@ static float g1_y; // Value in the y-axis where the topmost bird in left lies
 static float g2_y; // Value in the y-axis where the bottom bird in left lies
 static float g3_y; // Value in the y-axis where the front bird lies
 
-static float x_pos; // current offset for movement in x-direction each frame
+static float x_pos; // Current offset for movement in x-direction each frame
 static float wing_pos1; // the first wing value set to be approx. 90 degree with the next wing
 static float wing_pos2; // the second wing value set to be approx. 90 degree with the first one
+
+static float start_flag; // Keeps track of whether the program has started for the first time or it's a restart
 
 
 void init() {
@@ -116,9 +116,10 @@ void moveGeeseAndFlapWings() {
 void animate(int value) {
 	/* Recursive call to animate after each 100 msec. */
 
-	// At each 100 msec, checks isAnimate flag and proceeds animation 
+	// At each 100 msec, checks if isAnimate flag is 1 and if is, starts animation
 	if (isAnimate)
 	{
+			//moves birds towards the right of screen and redraws frame
 			moveGeeseAndFlapWings();
 			glutPostRedisplay();
 			glutTimerFunc(animationPeriod, animate, 0);	
@@ -139,32 +140,24 @@ void startAnimationFromCurrentLocation() {
 	/* Starts animation from the current location. */
 	if (isAnimate == 0) {
 		isAnimate = 1;
+		glutPostRedisplay();
 		glutTimerFunc(animationPeriod, animate, 0);
 	}
-	std::cout << "Press enter to restart animation and space to pause animation." << std::endl;
-}
-
-void pauseAnimation() {
-	/* Sets 'isAnimate' flag to 0 to pause animation. */
-	isAnimate = 0;
+	// start flag is increased on each animation
+	start_flag += 1;
+	std::cout << "Press any key to restart animation.." << std::endl;
 }
 
 void keyInput(unsigned char key, int x, int y) {
 	/* Function to handle keyboard input. */
-		switch (key)
-		{
-		case 13: 
-			// Restarts animation from start on pressing ENTER
-			restartAnimationFromStart();
-			break;
-		case ' ':
-			// Pauses animation on pressing SPACE
-			pauseAnimation();
-			break;
-		default:
-			// Starts animation on any key press
-			startAnimationFromCurrentLocation();
-		}
+	if (start_flag == 0) {
+	// On fresh start, animation starts from the current location
+		startAnimationFromCurrentLocation();
+	}
+	else {
+	// On restart, the geese are placed in the initial position again before animation
+		restartAnimationFromStart();
+	}
 }
 
 // Set width and height of canvas to 480 by 480.
